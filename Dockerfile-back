@@ -1,0 +1,18 @@
+FROM python:3.7.10-slim-buster
+
+WORKDIR /app/
+
+COPY backend ./backend
+
+RUN pip install --upgrade pip
+RUN apt update && apt install -y \
+python3-pip python3-dev graphviz libgraphviz-dev pkg-config \
+&& pip3 install psycopg2-binary \
+&& pip3 install -r backend/requirements.txt \
+&& apt-get remove -y python3-pip python3-dev graphviz libgraphviz-dev pkg-config  \
+&& apt-get autoremove -y && apt-get clean -y
+
+
+EXPOSE 3001
+ENV SECRET_KEY="asasd123"
+CMD ["python3", "./backend/manage.py", "runserver", "0.0.0.0:3001"]
